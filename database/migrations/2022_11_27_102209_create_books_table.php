@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('publisher');
             $table->integer('publication_year');
             $table->text('description');
+            $table->string('image');
             $table->timestamps();
         });
     }
