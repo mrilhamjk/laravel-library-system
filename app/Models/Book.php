@@ -21,4 +21,14 @@ class Book extends Model
                 ->orWhere('description', 'like', $keyword);
         }
     }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
+
+    public function borrowers()
+    {
+        return $this->hasMany(Borrower::class);
+    }
 }

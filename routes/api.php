@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\BorrowerController;
+use App\Http\Controllers\OrderController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,6 +22,16 @@ use Illuminate\Support\Facades\Route;
 // });
 
 Route::apiResource('books', BookController::class);
+Route::controller(OrderController::class)
+    ->group(function () {
+        Route::get('orders', 'index');
+        Route::post('orders', 'store');
+    });
+Route::controller(BorrowerController::class)
+    ->group(function () {
+        Route::get('borrowers', 'index');
+        Route::post('borrowers', 'store');
+    });
 Route::group(['middleware' => 'api'], function () {
     Route::controller(AuthController::class)
         ->group(function () {

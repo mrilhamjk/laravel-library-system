@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->string('user_id');
-            $table->string('book_id');
+            $table->foreignId('user_id')->onDelete('cascade');
+            $table->foreignId('book_id')->onDelete('cascade');
             $table->timestamps();
         });
     }
