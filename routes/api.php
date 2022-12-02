@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\BorrowerController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -32,6 +33,7 @@ Route::controller(BorrowerController::class)
         Route::get('borrowers', 'index');
         Route::post('borrowers', 'store');
     });
+Route::apiResource('users', UserController::class);
 Route::group(['middleware' => 'api'], function () {
     Route::controller(AuthController::class)
         ->group(function () {

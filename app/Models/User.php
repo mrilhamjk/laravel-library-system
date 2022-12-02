@@ -74,4 +74,15 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasMany(Borrower::class);
     }
+
+    public function scopeFilter($query, array $filters)
+    {
+        if ($filters['keyword'] ?? false) {
+            $keyword = "%{$filters['keyword']}%";
+            $query->where('name', 'like', $keyword)
+                ->orWhere('username', 'like', $keyword)
+                ->orWhere('identity', 'like', $keyword)
+                ->orWhere('role', 'like', $keyword);
+        }
+    }
 }

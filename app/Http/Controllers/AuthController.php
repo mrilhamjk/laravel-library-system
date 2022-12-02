@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class AuthController extends Controller
@@ -49,7 +50,8 @@ class AuthController extends Controller
     {
         return response([
             'message' => 'Berhasil Mengambil Data',
-            'user' => auth()->user(),
+            'user' => User::with('borrowers.book')
+                ->find(auth()->user()->id),
         ]);
     }
 
