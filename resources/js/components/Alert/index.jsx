@@ -1,15 +1,15 @@
-const Alert = ({ children, success }) => {
-    const hideAlert = () => {
-        const alert = document.getElementById("alert");
-        if (alert) alert.remove();
-    };
+const Alert = ({ children, success, className = "" }) => {
+    if (className === "") {
+        if (success) className = "alert success";
+        else className = "alert failed";
+    } else {
+        if (success) className += " alert success";
+        else className += " alert failed";
+    }
 
     return (
-        <div id="alert" className={success ? "alert success" : "alert failed"}>
-            <span>{children}</span>
-            <button type="button" onClick={hideAlert}>
-                X
-            </button>
+        <div id="alert" className={className}>
+            {children}
         </div>
     );
 };

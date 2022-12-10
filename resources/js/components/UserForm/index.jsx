@@ -15,7 +15,7 @@ const UserForm = ({
             <div className="mb-4 lg:mb-0">
                 <input
                     type="text"
-                    value={userData.name.value}
+                    value={userData.name}
                     className="forminput"
                     onChange={(i) => setName(i.target.value)}
                     placeholder="Masukkan Nama Lengkap.."
@@ -23,7 +23,7 @@ const UserForm = ({
             </div>
             <div className="mb-4 lg:mb-0">
                 <select
-                    value={userData.role.value}
+                    value={userData.role}
                     className="forminput"
                     onChange={(i) => setRole(i.target.value)}
                 >
@@ -34,7 +34,7 @@ const UserForm = ({
             <div className="mb-4 lg:mb-0">
                 <input
                     type="text"
-                    value={userData.username.value}
+                    value={userData.username}
                     className="forminput"
                     onChange={(i) => setUsername(i.target.value)}
                     placeholder="Masukkan Nama Pengguna.."
@@ -43,7 +43,7 @@ const UserForm = ({
             <div className="mb-4 lg:mb-0">
                 <input
                     type="password"
-                    value={userData.password.value}
+                    value={userData.password}
                     className="forminput"
                     onChange={(i) => setPassword(i.target.value)}
                     placeholder="Masukkan Password.."
@@ -52,7 +52,7 @@ const UserForm = ({
             <div className="mb-4 lg:mb-0 lg:col-span-2">
                 <textarea
                     rows="4"
-                    value={userData.identity.value}
+                    value={userData.identity}
                     className="forminput"
                     onChange={(i) => setIdentity(i.target.value)}
                     placeholder="Masukkan Identitas.."

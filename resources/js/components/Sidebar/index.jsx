@@ -1,10 +1,23 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import {
+    useLoadingStore, //
+    useAuthStore, //
+    useBookStore, //
+    useOrderStore, //
+    useBorrowerStore, //
+    useUserStore, //
+} from "../../store";
 import NavLink from "../NavLink";
 import ImgLogo from "../../images/MLiby.svg";
 
 const Sidebar = ({ pageActive, children }) => {
-    const [user] = useState({ role: "admin" });
+    const { userLogin, logout, resetAuth, reset } = useAuthStore();
+    const { resetBooks } = useBookStore();
+    const { resetOrders } = useOrderStore();
+    const { resetBorrowers } = useBorrowerStore();
+    const { resetUsers } = useUserStore();
+    const { setLoading } = useLoadingStore();
     const [navHide, setNavHide] = useState(true);
     const navLinks = [
         {
@@ -46,6 +59,18 @@ const Sidebar = ({ pageActive, children }) => {
         },
     ];
 
+    const logoutHandler = async () => {
+        setLoading(true);
+        await logout();
+        resetAuth();
+        resetBooks();
+        resetOrders();
+        resetBorrowers();
+        resetUsers();
+        setTimeout(reset, 3000);
+        setLoading(false);
+    };
+
     return (
         <div className="w-full h-auto">
             <header className="w-full h-auto bg-white flex justify-between items-center shadow-me py-2 px-4 fixed top-0 left-0 z-[999] lg:justify-start">
@@ -80,7 +105,7 @@ const Sidebar = ({ pageActive, children }) => {
                     return (
                         <NavLink
                             key={i}
-                            user={user}
+                            user={userLogin}
                             pageActive={pageActive}
                             active={n.active}
                             role={n.role}
@@ -90,7 +115,11 @@ const Sidebar = ({ pageActive, children }) => {
                         </NavLink>
                     );
                 })}
-                <button type="button" className="navlink">
+                <button
+                    type="button"
+                    className="navlink"
+                    onClick={logoutHandler}
+                >
                     Keluar
                 </button>
             </nav>

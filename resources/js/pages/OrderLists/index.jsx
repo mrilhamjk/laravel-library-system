@@ -1,21 +1,67 @@
-import { useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useDebounce } from "use-debounce";
+import { useBorrowerStore, useOrderStore } from "../../store";
+import Alert from "../../components/Alert";
 import Sidebar from "../../components/Sidebar";
 import Search from "../../components/Search";
 import Pagination from "../../components/Pagination";
 
 const OrderLists = () => {
-    const page = useSearchParams()[0].get("page") ?? 1;
+    const [page, setPage] = useState(null);
+    const [pageValue] = useDebounce(page, 200);
     const [keyword, setKeyword] = useState("");
-    const [orders] = useState([
-        { name: "Ilham Jaya Kusuma", book_title: "Cara mencintai alam" },
-        { name: "Ilham Jaya Kusuma", book_title: "Cara mencintai alam" },
-        { name: "Ilham Jaya Kusuma", book_title: "Cara mencintai alam" },
-    ]);
+    const [keywordValue] = useDebounce(keyword, 800);
+    const {
+        error: orderErr,
+        message: orderMsg,
+        orders,
+        getAllOrders,
+        deleteOrder,
+        reset: orderReset,
+    } = useOrderStore();
+    const {
+        error: borrowerErr,
+        message: borrowerMsg,
+        createBorrower,
+        reset: borrowerReset,
+    } = useBorrowerStore();
+
+    useEffect(() => {
+        getAllOrders(pageValue, keywordValue);
+    }, [pageValue]);
+
+    useEffect(() => {
+        if (pageValue !== 1) setPage(1);
+        else getAllOrders(null, keywordValue);
+    }, [keywordValue]);
+
+    const acceptBorrower = async (id) => {
+        if (confirm("Yakin ingin menerima peminjam ini?")) {
+            const formData = new FormData();
+            formData.append("order_id", id);
+            await createBorrower(formData);
+            await getAllOrders(null, keywordValue);
+            setTimeout(borrowerReset, 3000);
+        }
+    };
+
+    const rejectBorrower = async (id) => {
+        if (confirm("Yakin ingin menolak peminjam ini?")) {
+            await deleteOrder(id);
+            await getAllOrders(null, keywordValue);
+            setTimeout(orderReset, 3000);
+        }
+    };
 
     return (
         <Sidebar pageActive="orderlists">
             <section className="p-4 md:p-8 lg:p-12">
+                {orderMsg !== "" ? (
+                    <Alert success={!orderErr}>{orderMsg}</Alert>
+                ) : null}
+                {borrowerMsg !== "" ? (
+                    <Alert success={!borrowerErr}>{borrowerMsg}</Alert>
+                ) : null}
                 <div className="w-full h-auto mb-4 md:mb-6">
                     <Search
                         keyword={keyword}
@@ -39,28 +85,44 @@ const OrderLists = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {orders.map((o, i) => {
+                            {orders.data.length === 0 && (
+                                <tr className="bg-white border border-slate-400">
+                                    <td
+                                        className="text-center text-slate-900 text-xl font-medium py-2 px-4"
+                                        colSpan={3}
+                                    >
+                                        Order Kosong
+                                    </td>
+                                </tr>
+                            )}
+                            {orders.data.map((o) => {
                                 return (
                                     <tr
-                                        key={i}
+                                        key={o.id}
                                         className="bg-white border border-slate-400"
                                     >
                                         <td className="text-slate-700 text-xl font-medium py-2 px-4">
-                                            {o.name}
+                                            {o.user.name}
                                         </td>
                                         <td className="text-slate-700 text-xl font-medium py-2 px-4">
-                                            {o.book_title}
+                                            {o.book.title}
                                         </td>
                                         <td className="py-2 px-4">
                                             <button
                                                 type="button"
                                                 className="bg-emerald-600 buttonaction mr-2"
+                                                onClick={() => {
+                                                    acceptBorrower(o.id);
+                                                }}
                                             >
                                                 ✓
                                             </button>
                                             <button
                                                 type="button"
                                                 className="bg-red-600 buttonaction"
+                                                onClick={() => {
+                                                    rejectBorrower(o.id);
+                                                }}
                                             >
                                                 X
                                             </button>
@@ -72,7 +134,9 @@ const OrderLists = () => {
                     </table>
                 </div>
                 <div className="w-full h-auto flex justify-center">
-                    <Pagination data={orders} page={page} basePath="/orders" />
+                    {orders.links.length > 3 && (
+                        <Pagination links={orders.links} setPage={setPage} />
+                    )}
                 </div>
             </section>
         </Sidebar>

@@ -1,29 +1,13 @@
-import { useState } from "react";
+import { useEffect } from "react";
+import { useAuthStore } from "../../store";
 import Sidebar from "../../components/Sidebar";
 
 const UserProfile = () => {
-    const [user] = useState({
-        name: "Ilham Jaya Kusuma",
-        username: "mrilhamjk",
-        identity: "NISN 123456789, No. Absen 17",
-    });
-    const [borrowers] = useState([
-        {
-            name: "Ilham Jaya Kusuma",
-            book_title: "Cara mencintai alam",
-            created_at: "12-12-2012 12:12",
-        },
-        {
-            name: "Ilham Jaya Kusuma",
-            book_title: "Cara mencintai alam",
-            created_at: "12-12-2012 12:12",
-        },
-        {
-            name: "Ilham Jaya Kusuma",
-            book_title: "Cara mencintai alam",
-            created_at: "12-12-2012 12:12",
-        },
-    ]);
+    const { userLogin, setUserLogin } = useAuthStore();
+
+    useEffect(() => {
+        setUserLogin();
+    }, []);
 
     return (
         <Sidebar pageActive="userprofile">
@@ -34,13 +18,13 @@ const UserProfile = () => {
                             NAMA LENGKAP
                         </h2>
                         <p className="text-lg text-slate-700 mb-4 md:mb-8">
-                            {user.name}
+                            {userLogin.name}
                         </p>
                         <h2 className="text-3xl text-slate-700 uppercase font-semibold mb-2">
                             NAMA PENGGUNA
                         </h2>
                         <p className="text-lg text-slate-700 mb-4">
-                            {user.username}
+                            {userLogin.username}
                         </p>
                     </div>
                     <div className="w-full h-auto">
@@ -48,7 +32,7 @@ const UserProfile = () => {
                             IDENTITAS DIRI
                         </h2>
                         <ul className="list-disc pl-6 text-lg text-slate-700">
-                            {user.identity
+                            {userLogin.identity
                                 .replace(/,\s*$/, "")
                                 .split(",")
                                 .map((ui, index) => {
@@ -73,20 +57,32 @@ const UserProfile = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {borrowers.map((b, i) => {
+                            {userLogin.borrowers.length === 0 && (
+                                <tr className="bg-white border border-slate-400">
+                                    <td
+                                        className="text-center text-slate-900 text-xl font-medium py-2 px-4"
+                                        colSpan={3}
+                                    >
+                                        Pinjaman Kosong
+                                    </td>
+                                </tr>
+                            )}
+                            {userLogin.borrowers.map((b, i) => {
                                 return (
                                     <tr
                                         key={i}
                                         className="bg-white border border-slate-400"
                                     >
                                         <td className="text-slate-700 text-xl font-medium py-2 px-4">
-                                            {b.name}
+                                            {userLogin.name}
                                         </td>
                                         <td className="text-slate-700 text-xl font-medium py-2 px-4">
-                                            {b.book_title}
+                                            {b.book.title}
                                         </td>
                                         <td className="text-slate-700 text-xl font-medium py-2 px-4">
-                                            {b.created_at}
+                                            {new Date(
+                                                b.created_at
+                                            ).toLocaleDateString()}
                                         </td>
                                     </tr>
                                 );

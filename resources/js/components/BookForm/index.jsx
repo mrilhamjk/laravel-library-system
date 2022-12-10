@@ -16,7 +16,7 @@ const BookForm = ({
             <div className="mb-4 lg:mb-0">
                 <input
                     type="text"
-                    value={bookData.title.value}
+                    value={bookData.title}
                     className="forminput"
                     onChange={(i) => setTitle(i.target.value)}
                     placeholder="Masukkan Judul.."
@@ -25,7 +25,7 @@ const BookForm = ({
             <div className="mb-4 lg:mb-0">
                 <input
                     type="text"
-                    value={bookData.author.value}
+                    value={bookData.author}
                     className="forminput"
                     onChange={(i) => setAuthor(i.target.value)}
                     placeholder="Masukkan Pengarang.."
@@ -34,7 +34,7 @@ const BookForm = ({
             <div className="mb-4 lg:mb-0">
                 <input
                     type="text"
-                    value={bookData.publisher.value}
+                    value={bookData.publisher}
                     className="forminput"
                     onChange={(i) => setPublisher(i.target.value)}
                     placeholder="Masukkan Penerbit.."
@@ -45,7 +45,7 @@ const BookForm = ({
                     type="number"
                     min="1901"
                     max="2099"
-                    value={bookData.publicationYear.value}
+                    value={bookData.publicationYear}
                     className="forminput"
                     onChange={(i) => setPublicationYear(i.target.value)}
                     placeholder="Masukkan Tahun Terbit.."
@@ -54,7 +54,7 @@ const BookForm = ({
             <div className="mb-4 lg:mb-0 lg:col-span-2">
                 <textarea
                     rows="4"
-                    value={bookData.description.value}
+                    value={bookData.description}
                     className="forminput"
                     onChange={(i) => setDescription(i.target.value)}
                     placeholder="Masukkan Deskripsi.."

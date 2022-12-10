@@ -190,6 +190,11 @@ return [
         'publication_year' => 'tahun terbit',
         'description' => 'deskripsi',
         'image' => 'gambar buku',
+        'name' => 'nama',
+        'role' => 'role',
+        'username' => 'username',
+        'password' => 'password',
+        'identity' => 'identitas',
     ],
 
 ];

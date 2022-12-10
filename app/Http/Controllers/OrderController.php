@@ -53,4 +53,25 @@ class OrderController extends Controller
             'orders' => $orders,
         ], 201);
     }
+
+    public function destroy($id)
+    {
+        if (!$order = Order::find($id)) {
+            return response([
+                'message' => 'Buku tidak ditemukan'
+            ], 404);
+        }
+
+        $order->delete();
+        $orders = Order::latest()
+            ->with(['user', 'book'])
+            ->paginate(10);
+        $orders->withPath('/orders');
+        $message = 'Berhasil menghapus order buku';
+
+        return response([
+            'message' => $message,
+            'orders' => $orders,
+        ], 200);
+    }
 }

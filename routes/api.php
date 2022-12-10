@@ -22,18 +22,6 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // });
 
-Route::apiResource('books', BookController::class);
-Route::controller(OrderController::class)
-    ->group(function () {
-        Route::get('orders', 'index');
-        Route::post('orders', 'store');
-    });
-Route::controller(BorrowerController::class)
-    ->group(function () {
-        Route::get('borrowers', 'index');
-        Route::post('borrowers', 'store');
-    });
-Route::apiResource('users', UserController::class);
 Route::group(['middleware' => 'api'], function () {
     Route::controller(AuthController::class)
         ->group(function () {
@@ -41,5 +29,19 @@ Route::group(['middleware' => 'api'], function () {
             Route::post('logout', 'logout');
             Route::get('refresh', 'refresh');
             Route::get('me', 'me');
+        });
+    Route::apiResource('users', UserController::class);
+    Route::apiResource('books', BookController::class);
+    Route::controller(OrderController::class)
+        ->group(function () {
+            Route::get('orders', 'index');
+            Route::post('orders', 'store');
+            Route::delete('orders/{id}', 'destroy');
+        });
+    Route::controller(BorrowerController::class)
+        ->group(function () {
+            Route::get('borrowers', 'index');
+            Route::post('borrowers', 'store');
+            Route::delete('borrowers/{id}', 'destroy');
         });
 });

@@ -39,13 +39,19 @@
         @apply bg-blue-600 text-white;
     }
     .alert {
-        @apply text-lg font-medium mb-4 md:mb-6 py-4 px-6 rounded-lg flex justify-between items-center shadow-me;
+        @apply text-center text-lg font-medium mb-4 md:mb-6 py-4 px-6 rounded-lg flex justify-center items-center shadow-me;
     }
     .alert.success {
         @apply bg-emerald-200 text-emerald-800;
     }
     .alert.failed {
         @apply bg-red-200 text-red-800;
+    }
+    .loading {
+        @apply w-full h-screen bg-slate-300 flex justify-center items-center fixed top-0 left-0 z-[99999];
+    }
+    .loading.hide {
+        @apply hidden;
     }
 }
 

@@ -1,55 +1,52 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useUserStore } from "../../store";
+import Alert from "../../components/Alert";
 import Sidebar from "../../components/Sidebar";
 import UserForm from "../../components/UserForm";
 
 const UserCreate = () => {
-    const [userData, setUserData] = useState({
-        name: { value: "", message: null },
-        role: { value: "user", message: null },
-        username: { value: "", message: null },
-        password: { value: "", message: null },
-        identity: { value: "", message: null },
-    });
+    const { error, message, createUser, reset } = useUserStore();
+    const [name, setName] = useState("");
+    const [role, setRole] = useState("user");
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+    const [identity, setIdentity] = useState("");
+    const navigate = useNavigate();
 
-    const formHandler = (e) => {
+    const createUserHandler = async (e) => {
         e.preventDefault();
         const formData = new FormData();
-        formData.append("name", userData.name.value);
-        formData.append("role", userData.role.value);
-        formData.append("username", userData.username.value);
-        formData.append("password", userData.password.value);
-        formData.append("identity", userData.identity.value);
-        console.info(userData);
+        formData.append("name", name);
+        formData.append("role", role);
+        formData.append("username", username);
+        formData.append("password", password);
+        formData.append("identity", identity);
+        await createUser(formData);
+        setTimeout(reset, 3000);
+        setPassword("");
     };
 
-    const setName = (value) => {
-        const name = { value };
-        setUserData({ ...userData, name });
-    };
-    const setRole = (value) => {
-        const role = { value };
-        setUserData({ ...userData, role });
-    };
-    const setUsername = (value) => {
-        const username = { value };
-        setUserData({ ...userData, username });
-    };
-    const setPassword = (value) => {
-        const password = { value };
-        setUserData({ ...userData, password });
-    };
-    const setIdentity = (value) => {
-        const identity = { value };
-        setUserData({ ...userData, identity });
-    };
+    useEffect(() => {
+        if (!error && message !== "") {
+            navigate("/users");
+        }
+    }, [error, message, navigate]);
 
     return (
         <Sidebar pageActive="usercreate">
             <section className="p-4 md:p-8 lg:p-12">
+                {message !== "" && <Alert success={!error}>{message}</Alert>}
                 <div className="w-full h-auto bg-white p-4 rounded-lg shadow-me md:p-6 lg:p-8">
                     <UserForm
-                        formHandler={formHandler}
-                        userData={userData}
+                        formHandler={createUserHandler}
+                        userData={{
+                            name,
+                            role,
+                            username,
+                            password,
+                            identity,
+                        }}
                         setName={setName}
                         setRole={setRole}
                         setUsername={setUsername}

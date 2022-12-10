@@ -1,29 +1,35 @@
-import { Link } from "react-router-dom";
-
-const Pagination = ({ data, page, basePath }) => {
+const Pagination = ({ links, setPage }) => {
     return (
         <div className="shadow-me overflow-hidden flex flex-wrap items-center content-center">
-            <Link className="paginationlink rounded-l-lg" to={basePath}>
-                {"<"}
-            </Link>
-            {data.map((b, i) => {
+            {links.map((l, i) => {
+                const label = l.label.split(" ");
+                const text =
+                    label.length > 1
+                        ? label[1] === "Sebelumnya"
+                            ? "<"
+                            : ">"
+                        : label[0];
+                let className = l.active
+                    ? "paginationlink active"
+                    : "paginationlink";
+                const startIndex = 0;
+                const lastIndex = links.length - 1;
+                if (i === startIndex) className += " rounded-l-lg";
+                if (i === lastIndex) className += " rounded-r-lg";
+                const toPage = l.url && l.url.match(/[0-9]/i)[0];
                 return (
-                    <Link
+                    <button
+                        type="button"
                         key={i}
-                        className={
-                            page == ++i
-                                ? "paginationlink active"
-                                : "paginationlink"
-                        }
-                        to={`${basePath}?page=${i}`}
+                        className={className}
+                        onClick={() => {
+                            if (toPage) setPage(toPage);
+                        }}
                     >
-                        {i}
-                    </Link>
+                        {text}
+                    </button>
                 );
             })}
-            <Link className="paginationlink rounded-r-lg" to={basePath}>
-                {">"}
-            </Link>
         </div>
     );
 };

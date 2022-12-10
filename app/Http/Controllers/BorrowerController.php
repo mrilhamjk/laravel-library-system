@@ -48,4 +48,25 @@ class BorrowerController extends Controller
             'borrowers' => $borrowers,
         ], 201);
     }
+
+    public function destroy($id)
+    {
+        if (!$borrower = Borrower::find($id)) {
+            return response([
+                'message' => 'Peminjam tidak ditemukan'
+            ], 404);
+        }
+
+        $borrower->delete();
+        $borrowers = Borrower::latest()
+            ->with(['user', 'book'])
+            ->paginate(10);
+        $borrowers->withPath('/borrowers');
+        $message = 'Berhasil mengonfirmasi peminjam buku';
+
+        return response([
+            'message' => $message,
+            'borrowers' => $borrowers,
+        ], 200);
+    }
 }
